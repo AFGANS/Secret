@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombol Cinta</title>
+    <!-- Tailwind CSS CDN untuk styling yang modern dan responsif -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Mengatur font 'Inter' untuk tampilan yang modern */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        
+        /* Gaya dasar untuk body dan animasi fade-in */
+        body {
+            font-family: 'Inter', sans-serif;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Animasi untuk efek fade-in saat halaman dimuat */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animasi untuk efek "berdenyut" pada ikon hati */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-icon {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="bg-fuchsia-100 flex items-center justify-center min-h-screen p-4">
+    <!-- Container utama dengan gaya modern dari Tailwind -->
+    <div class="container bg-white p-8 sm:p-12 rounded-3xl shadow-xl max-w-lg mx-auto text-center">
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-fuchsia-800 mb-4">Hiii Aurell</h1>
+        <p class="text-lg sm:text-xl text-gray-600 mb-8">Kamu Bagai Bintang Yang Menerangi Gelap Malamku.</p>
+
+        <!-- Tombol bertema cinta yang akan memanggil fungsi JavaScript -->
+        <button id="loveButton" class="love-button inline-flex items-center justify-center
+                                       px-8 py-3 text-xl font-bold text-white
+                                       bg-gradient-to-r from-fuchsia-500 to-pink-500
+                                       border-none rounded-full cursor-pointer
+                                       shadow-lg hover:shadow-xl transition-all duration-300
+                                       transform hover:-translate-y-1 hover:scale-105">
+            <span class="heart-icon mr-4 text-2xl">❤️</span>
+            Klik di Sini
+        </button>
+
+        <!-- Pesan untuk informasi pengguna -->
+        <p id="infoMessage" class="mt-6 text-sm text-gray-500"></p>
+    </div>
+
+    <script>
+        // Menunggu semua konten HTML dimuat sebelum menambahkan event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const loveButton = document.getElementById('loveButton');
+            const infoMessage = document.getElementById('infoMessage');
+
+            // Fungsi untuk menampilkan pesan status ke pengguna
+            function showMessage(text, isError = false) {
+                infoMessage.textContent = text;
+                infoMessage.className = `mt-6 text-sm ${isError ? 'text-red-500' : 'text-gray-500'}`;
+            }
+
+            // Menangani klik pada tombol
+            loveButton.addEventListener('click', async () => {
+                showMessage('Memproses permintaan Anda...');
+
+                // 1. Meminta mode layar penuh (fullscreen)
+                try {
+                    await document.documentElement.requestFullscreen();
+                    showMessage('Layar penuh diaktifkan.');
+                } catch (e) {
+                    console.error("Gagal mengaktifkan mode layar penuh:", e);
+                    showMessage('Gagal mengaktifkan mode layar penuh. Fitur ini mungkin tidak didukung.', true);
+                }
+
+                // 2. Mengunci orientasi ke lanskap
+                try {
+                    if (screen.orientation && screen.orientation.lock) {
+                        await screen.orientation.lock('landscape');
+                        showMessage('Orientasi layar diubah ke lanskap.');
+                    } else {
+                        showMessage('API orientasi layar tidak didukung di perangkat ini.', true);
+                    }
+                } catch (e) {
+                    console.error("Gagal mengunci orientasi:", e);
+                    showMessage('Gagal mengunci orientasi layar.', true);
+                }
+
+                // 3. Membuka URL baru setelah jeda untuk memastikan transisi visual selesai
+                setTimeout(() => {
+                    const newWindow = window.open('https://love.tsonit.com/i-love-youu-aurell', '_blank');
+                    if (newWindow) {
+                        showMessage('Mengalihkan ke halaman lain...');
+                    } else {
+                        showMessage('Browser memblokir pop-up. Mohon izinkan pop-up untuk melanjutkan.', true);
+                    }
+                }, 500); // Jeda 500ms
+            });
+        });
+    </script>
+</body>
+</html>
